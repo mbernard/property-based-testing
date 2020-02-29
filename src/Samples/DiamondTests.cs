@@ -91,14 +91,21 @@ namespace Samples
                 }).ToProperty();
         }
 
+        [Property(Arbitrary = new[] {typeof(LetterGenerator)})]
+        public Property InputLetterRowContainsNoOutsidePaddingSpaces(char c)
+        {
+           var inputLetterRow = Diamond.Generate(c).ToArray().First(x => GetCharInRow(x) == c);
+           return (inputLetterRow[0] != ' ' && inputLetterRow[^1] != ' ').ToProperty();
+        }
+
         private int CountLeadingSpaces(string s)
         {
             return s.IndexOf(GetCharInRow(s));
         }
 
-        private static char GetCharInRow(string s)
+        private static char GetCharInRow(string row)
         {
-            return s.First(x => x != ' ');
+            return row.First(x => x != ' ');
         }
 
         private int CountTrailingSpaces(string s)
