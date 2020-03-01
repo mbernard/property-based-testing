@@ -9,6 +9,5 @@ namespace Samples
     {
         public static Arbitrary<char> Generate() =>
             Arb.Default.Char().Filter(c => c >= 'A' && c <= 'Z');
-
     }
 }

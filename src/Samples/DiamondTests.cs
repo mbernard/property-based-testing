@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using FsCheck;
 using FsCheck.Xunit;
 
@@ -47,7 +46,7 @@ namespace Samples
         }
 
         [Property(Arbitrary = new[] { typeof(LetterGenerator) })]
-        public Property DiamondIsSymmetric(char c)
+        public Property DiamondWidthEqualsHeight(char c)
         {
             var diamond = Diamond.Generate(c).ToList();
             return diamond.All(row => row.Length == diamond.Count).ToProperty();
@@ -112,34 +111,6 @@ namespace Samples
         {
             var i = s.LastIndexOf(GetCharInRow(s));
             return s.Length - i - 1;
-        }
-    }
-
-    public class Diamond
-    {
-        public static IEnumerable<string> Generate(char c)
-        {
-            for (var i = 'A'; i < c; i++) yield return GenerateRow(i, c);
-            for (var i = c; i >= 'A'; i--) yield return GenerateRow(i, c);
-        }
-
-        private static string GenerateRow(char currentChar, char maxChar)
-        {
-            var length = (maxChar - 'A' + 1) * 2 - 1;
-            var padding = maxChar - currentChar;
-            var sb = new StringBuilder();
-
-            sb.Append(new string(' ', padding));
-            sb.Append(currentChar);
-            if (currentChar != 'A')
-            {
-                var insidePadding = length - padding * 2 - 2;
-                sb.Append(new string(' ', insidePadding));
-                sb.Append(currentChar);
-            }
-
-            sb.Append(new string(' ', padding));
-            return sb.ToString();
         }
     }
 }
