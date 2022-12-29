@@ -2,6 +2,7 @@
 using System.Linq;
 using FsCheck;
 using FsCheck.Xunit;
+using Microsoft.FSharp.Collections;
 
 namespace Samples
 {
@@ -95,6 +96,15 @@ namespace Samples
         {
            var inputLetterRow = Diamond.Generate(c).ToArray().First(x => GetCharInRow(x) == c);
            return (inputLetterRow[0] != ' ' && inputLetterRow[^1] != ' ').ToProperty();
+        }
+
+        [Property(Arbitrary = new[] { typeof(LetterGenerator) })]
+        public Property LeadingPaddingOfTopHalfShrinks(char c)
+        {
+            var diamond = Diamond.Generate(c).ToArray();
+            var half = diamond.Length / 2;
+            var topHalf = diamond[..half];
+            return SeqModule.Windowed(2, topHalf.Select(x => CountLeadingSpaces(x))).All(x => x[0] > x[1]).ToProperty();
         }
 
         private int CountLeadingSpaces(string s)
